@@ -1,0 +1,7 @@
+core = "7.x"
+package = Ding!
+name = "Ding Footer"
+description = "Show panel blocks in footer"
+version = "7.x-0.1alpha"
+dependencies[] = "panels"
+dependencies[] = "ctools"

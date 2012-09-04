@@ -1,0 +1,115 @@
+<?php
+/**
+ * @file
+ * Ding Footer module main file.
+ */
+
+/**
+ * Implements hook_init().
+ */
+function ding_footer_init() {
+  theme('ding_footer_javascript');
+}
+
+/**
+ * Implement hook_menu().
+ */
+function ding_footer_menu() {
+  $items = array();
+
+  $items['admin/config/ding/footer'] = array(
+    'title' => 'Ding Footer',
+    'description' => '',
+    'page callback' => 'ding_footer_admin_page',
+    'page arguments' => array(),
+    'access arguments' => array('access administration pages'),
+    'file' => 'ding_footer.admin.inc',
+  );
+
+  $items['admin/config/ding/footer/blocks'] = array(
+    'title' => 'Blocks',
+    'description' => 'Fill in as many fields as you need', /*TODO*/
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function ding_footer_block_info() {
+  $blocks = array();
+
+  $blocks['ding_footer'] = array(
+    'info' => 'Ding Footer, block'
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function ding_footer_block_view($delta) {
+  $block = array();
+
+  switch ($delta) {
+    case 'ding_footer':
+      $footer_blocks = variable_get('ding_footer_blocks', array());
+      $block['content'] = theme('ding_footer', array('footer_blocks' => $footer_blocks));
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function ding_footer_theme($existing, $type, $theme, $path) {
+  $hooks = array();
+
+  $hooks['ding_footer_javascript'] = array(/*no data*/); 
+
+  $hooks['ding_footer'] = array(
+     'variables' => array('footer_blocks' => NULL),
+     'template' => 'ding_footer'
+  );
+
+  $hooks['ding_footer_admin_form'] = array(
+    'render element' => 'form',
+  );
+
+  return $hooks;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function ding_footer_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools' || $module == 'panels') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function ding_footer_cron() {
+  //TODO: Do we need information updated by cron?
+}
+
+/**
+ * Theme function for including JavaScript
+ *
+ * Copied from ting_search_carousel, but is it needed here?
+ */
+function theme_ding_footer_javascript() {
+  $path = drupal_get_path('module', 'ding_footer');
+
+  drupal_add_library('system', 'ui.widget');
+  //drupal_add_js()
+  //drupal_add_css()
+}
