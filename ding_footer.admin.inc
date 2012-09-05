@@ -143,7 +143,7 @@ function ding_footer_block_form($item = array(), $index = 0) {
   );
 
   $form['content[]'] = array(
-    '#type' => 'textarea',
+    '#type' => 'text_format',
     '#title' => t('Content'),
     '#description' => t('Contents for this footer column'),
     '#default_value' => isset($item['content']) ? $item['content'] : '',
@@ -187,12 +187,12 @@ function ding_footer_block_form($item = array(), $index = 0) {
  *   Form state.
  */
 function ding_footer_block_submit($form, &$form_state) {
-  $c = count($form_state['input']['save']);
+  $c = count($form_state['input']['content']);
   $blocks = array();
 
   for ($i = 0; $i < $c; $i++) {
     // Make an array of the data to save, ignoring blocks not marked for saving.
-    if (!empty($form_state['input']['save'][$i])) {
+    if (!empty($form_state['input']['content'][$i])) {
       $blocks[] = array(
 	'content' => $form_state['input']['content'][$i],
 	'save' => 'YES'
