@@ -101,7 +101,7 @@ function ding_footer_admin_form($form, &$form_state) {
     '#name' => 'add_footer_block',
     '#ajax' => array(
       'callback' => 'ding_footer_admin_form_ajaxify',
-      'wrapper' => 'ding_footer_blocks',
+      'wrapper' => 'ding-footer-blocks',
       'method' => 'replace',
       'effect' => 'fade'
     ),
@@ -153,7 +153,7 @@ function ding_footer_block_form($item = array(), $index = 0) {
   $form['save[]'] = array(
     '#type' => 'hidden',
     '#title' => t('Saved'),
-    '#value' => t('YES'),
+    '#value' => t('MAYBE'),
     '#name' => 'save_' . $index,
   );
 
