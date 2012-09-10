@@ -11,7 +11,9 @@
  *   Admin form.
  */
 function ding_footer_admin_page() {
-  drupal_add_js(drupal_get_path('module','ding_footer') . '/scripts/ding_footer.admin.js');
+  $path = drupal_get_path('module','ding_footer');
+  drupal_add_js($path . '/js/ding_footer.admin.js');
+  drupal_add_css($path . '/css/ding_footer.css');
   variable_set('ding_footer_blocks_hidden', array());
 
   return drupal_get_form('ding_footer_admin_form');
@@ -68,12 +70,13 @@ function ding_footer_admin_form($form, &$form_state) {
     $blocks_num++;
   }
 
-  for (; $i < $blocks_num + $c; $i++) {
+  for ($j = 0; $i < $blocks_num + $c; $i++, $j++) {
     $unsubmitted = array();
     // Fill previous field data if available.
-    if (isset($form_state['input']['content'][$i])) {
+    if (isset($form_state['input']['save'][$i]) && isset($form_state['input']['content'][$c + $j * 2])) {
       $unsubmitted = array(
-        'content' => $form_state['input']['content'][$i],
+        'content' => $form_state['input']['content'][$c + $j * 2]['value'],
+	'save' => $form_state['input']['save'][$i]
       );
     }
     $form['ding_footer']['blocks']['block_' . $i] = ding_footer_block_form($unsubmitted, $i);
@@ -82,7 +85,8 @@ function ding_footer_admin_form($form, &$form_state) {
   // Hide removed fields
   for ($i = 0; $i < $blocks_num + $c; $i++) {
     if (in_array($i, $hidden)) {
-      $form['ding_footer']['blocks']['block_' . $i]['save[]'] = '';
+      $form['ding_footer']['blocks']['block_' . $i]['save[]']['#value'] = '';
+      $form['ding_footer']['blocks']['block_' . $i]['content[]']['#value'] = '';
       $form['ding_footer']['blocks']['block_' . $i]['#prefix'] = '<div class="ding-footer-block-hidden">';
       $form['ding_footer']['blocks']['block_' . $i]['#postfix'] = '</div>';
     }
@@ -153,8 +157,7 @@ function ding_footer_block_form($item = array(), $index = 0) {
   $form['save[]'] = array(
     '#type' => 'hidden',
     '#title' => t('Saved'),
-    '#value' => t('MAYBE'),
-    '#name' => 'save_' . $index,
+    '#value' => isset($item['save']) ? $item['save'] : t('MAYBE'),
   );
 
   $form['remove[]'] = array(
@@ -187,14 +190,22 @@ function ding_footer_block_form($item = array(), $index = 0) {
  *   Form state.
  */
 function ding_footer_block_submit($form, &$form_state) {
-  $c = count($form_state['input']['content']);
+  $c = count($form_state['input']['save']);
   $blocks = array();
 
   for ($i = 0; $i < $c; $i++) {
     // Make an array of the data to save, ignoring blocks not marked for saving.
-    if (!empty($form_state['input']['content'][$i])) {
+    if (!empty($form_state['input']['save'][$i])) {
+      $content = $form_state['input']['content'][$i * 2]; // Formatting is every second.
+      if (is_array($content)) {
+	if (isset($content['value'])) {
+	  $content = $content['value'];
+	} else {
+	  continue;
+	}
+      }
       $blocks[] = array(
-	'content' => $form_state['input']['content'][$i],
+	'content' => $content,
 	'save' => 'YES'
       );
     }
