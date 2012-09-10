@@ -70,14 +70,15 @@ function ding_footer_admin_form($form, &$form_state) {
     $blocks_num++;
   }
 
-  for ($j = 0; $i < $blocks_num + $c; $i++, $j++) {
+  for ($j = 0; $i < $blocks_num + $c; $i++,$j++) {
     $unsubmitted = array();
     // Fill previous field data if available.
-    if (isset($form_state['input']['save'][$i]) && isset($form_state['input']['content'][$c + $j * 2])) {
+    if (isset($form_state['input']['save'][$i])) {
       $unsubmitted = array(
-        'content' => $form_state['input']['content'][$c + $j * 2]['value'],
+        'content' => $form_state['input']['content'][$i * 2],
 	'save' => $form_state['input']['save'][$i]
       );
+      error_log(serialize($unsubmitted));
     }
     $form['ding_footer']['blocks']['block_' . $i] = ding_footer_block_form($unsubmitted, $i);
   }
@@ -88,7 +89,7 @@ function ding_footer_admin_form($form, &$form_state) {
       $form['ding_footer']['blocks']['block_' . $i]['save[]']['#value'] = '';
       $form['ding_footer']['blocks']['block_' . $i]['content[]']['#value'] = '';
       $form['ding_footer']['blocks']['block_' . $i]['#prefix'] = '<div class="ding-footer-block-hidden">';
-      $form['ding_footer']['blocks']['block_' . $i]['#postfix'] = '</div>';
+      $form['ding_footer']['blocks']['block_' . $i]['#suffix'] = '</div>';
     }
   }
 
@@ -150,7 +151,7 @@ function ding_footer_block_form($item = array(), $index = 0) {
     '#type' => 'text_format',
     '#title' => t('Content'),
     '#description' => t('Contents for this footer column'),
-    '#default_value' => isset($item['content']) ? $item['content'] : '',
+    '#default_value' => isset($item['content']['value']) ? $item['content']['value'] : '',
     '#prefix' => '<div class="ding-footer-block">',
   );
 
@@ -196,14 +197,10 @@ function ding_footer_block_submit($form, &$form_state) {
   for ($i = 0; $i < $c; $i++) {
     // Make an array of the data to save, ignoring blocks not marked for saving.
     if (!empty($form_state['input']['save'][$i])) {
-      $content = $form_state['input']['content'][$i * 2]; // Formatting is every second.
-      if (is_array($content)) {
-	if (isset($content['value'])) {
-	  $content = $content['value'];
-	} else {
-	  continue;
-	}
-      }
+      $content = $form_state['input']['content'][$i * 2];
+      if (empty($content['value']))
+	continue;
+
       $blocks[] = array(
 	'content' => $content,
 	'save' => 'YES'
@@ -239,7 +236,7 @@ function ding_footer_admin_form_ajaxify($form, &$form_state) {
  */
 function theme_ding_footer_admin_form($variables) {
   $form = $variables['form'];
-  drupal_add_tabledrag('ding-footer-admin-sort', 'order', 'sibling', 'sort');
+  //drupal_add_tabledrag('ding-footer-admin-sort', 'order', 'sibling', 'sort');
 
   $header = array('Content Columns', '');
   $rows = array();
