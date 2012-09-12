@@ -78,7 +78,6 @@ function ding_footer_admin_form($form, &$form_state) {
         'content' => $form_state['input']['content'][$i * 2],
 	'save' => $form_state['input']['save'][$i]
       );
-      error_log(serialize($unsubmitted));
     }
     $form['ding_footer']['blocks']['block_' . $i] = ding_footer_block_form($unsubmitted, $i);
   }
@@ -87,7 +86,6 @@ function ding_footer_admin_form($form, &$form_state) {
   for ($i = 0; $i < $blocks_num + $c; $i++) {
     if (in_array($i, $hidden)) {
       $form['ding_footer']['blocks']['block_' . $i]['save[]']['#value'] = '';
-      $form['ding_footer']['blocks']['block_' . $i]['content[]']['#value'] = '';
       $form['ding_footer']['blocks']['block_' . $i]['#prefix'] = '<div class="ding-footer-block-hidden">';
       $form['ding_footer']['blocks']['block_' . $i]['#suffix'] = '</div>';
     }
