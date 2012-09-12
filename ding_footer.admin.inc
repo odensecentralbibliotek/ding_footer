@@ -35,7 +35,7 @@ function ding_footer_admin_form($form, &$form_state) {
     //Get a clicked 'remove' button
     foreach ($form_state['buttons'] as $k => $v) {
       if ($v['#name'] == $clicked_btn) {
-	if (preg_match('/edit-remove/', $v['#id'])) {
+	if (preg_match('/edit-(.*)-remove/', $v['#id'])) {
 	  $remove_btn = $k;
 	  $hidden[] = $remove_btn;
 	  variable_set('ding_footer_blocks_hidden', $hidden);
@@ -56,6 +56,8 @@ function ding_footer_admin_form($form, &$form_state) {
   $i = 0;
   $c = 1;
 
+  $form['ding_footer']['blocks']['#tree'] = TRUE;
+
   // Display saved blocks.
   if (isset($blocks[0]['content'])) {
     $c = count($blocks);
@@ -70,13 +72,13 @@ function ding_footer_admin_form($form, &$form_state) {
     $blocks_num++;
   }
 
-  for ($j = 0; $i < $blocks_num + $c; $i++,$j++) {
+  for (; $i < $blocks_num + $c; $i++) {
     $unsubmitted = array();
     // Fill previous field data if available.
-    if (isset($form_state['input']['save'][$i])) {
+    if (isset($form_state['input']['blocks']['block_' . $i]['save'])) {
       $unsubmitted = array(
-        'content' => $form_state['input']['content'][$i * 2],
-	'save' => $form_state['input']['save'][$i]
+        'content' => $form_state['input']['blocks']['block_' . $i]['content'],
+	'save' => $form_state['input']['blocks']['block_' . $i]['save']
       );
     }
     $form['ding_footer']['blocks']['block_' . $i] = ding_footer_block_form($unsubmitted, $i);
@@ -85,7 +87,7 @@ function ding_footer_admin_form($form, &$form_state) {
   // Hide removed fields
   for ($i = 0; $i < $blocks_num + $c; $i++) {
     if (in_array($i, $hidden)) {
-      $form['ding_footer']['blocks']['block_' . $i]['save[]']['#value'] = '';
+      $form['ding_footer']['blocks']['block_' . $i]['save']['#value'] = '';
       $form['ding_footer']['blocks']['block_' . $i]['#prefix'] = '<div class="ding-footer-block-hidden">';
       $form['ding_footer']['blocks']['block_' . $i]['#suffix'] = '</div>';
     }
@@ -133,7 +135,7 @@ function ding_footer_admin_form($form, &$form_state) {
 function ding_footer_block_form($item = array(), $index = 0) {
   $form = array();
 
-  $form['sort[]'] = array(
+  $form['sort'] = array(
     '#type' => 'weight',
     '#delta' => 5,
     '#default_value' => 0,
@@ -145,7 +147,7 @@ function ding_footer_block_form($item = array(), $index = 0) {
     ),
   );
 
-  $form['content[]'] = array(
+  $form['content'] = array(
     '#type' => 'text_format',
     '#title' => t('Content'),
     '#description' => t('Contents for this footer column'),
@@ -153,13 +155,13 @@ function ding_footer_block_form($item = array(), $index = 0) {
     '#prefix' => '<div class="ding-footer-block">',
   );
 
-  $form['save[]'] = array(
+  $form['save'] = array(
     '#type' => 'hidden',
     '#title' => t('Saved'),
     '#value' => isset($item['save']) ? $item['save'] : t('MAYBE'),
   );
 
-  $form['remove[]'] = array(
+  $form['remove'] = array(
     '#type' => 'button',
     '#value' => t('Remove'),
     '#name' => 'remove_' . $index,
@@ -189,15 +191,13 @@ function ding_footer_block_form($item = array(), $index = 0) {
  *   Form state.
  */
 function ding_footer_block_submit($form, &$form_state) {
-  $c = count($form_state['input']['save']);
+  $c = count($form_state['input']['blocks']);
   $blocks = array();
 
   for ($i = 0; $i < $c; $i++) {
     // Make an array of the data to save, ignoring blocks not marked for saving.
-    if (!empty($form_state['input']['save'][$i])) {
-      $content = $form_state['input']['content'][$i * 2];
-      if (empty($content['value']))
-	continue;
+    if (!empty($form_state['input']['blocks']['block_' . $i]['save']) && !empty($form_state['input']['blocks']['block_' . $i]['content']['value'])) {
+      $content = $form_state['input']['blocks']['block_' . $i]['content'];
 
       $blocks[] = array(
 	'content' => $content,
@@ -220,6 +220,7 @@ function ding_footer_block_submit($form, &$form_state) {
  *   Changed field to be updated.
  */
 function ding_footer_admin_form_ajaxify($form, &$form_state) {
+  // ISSUE: the values from the text_format are missing in WYSIWYG-mode.
   return $form;
 }
 
@@ -234,17 +235,17 @@ function ding_footer_admin_form_ajaxify($form, &$form_state) {
  */
 function theme_ding_footer_admin_form($variables) {
   $form = $variables['form'];
-  //drupal_add_tabledrag('ding-footer-admin-sort', 'order', 'sibling', 'sort');
+  drupal_add_tabledrag('ding-footer-admin-sort', 'order', 'sibling', 'sort');
 
   $header = array('Content Columns', '');
   $rows = array();
   foreach (element_children($form['ding_footer']['blocks']) as $key) {
     // Add class to group weight fields for drag and drop.
-    $form['ding_footer']['blocks'][$key]['sort[]']['#attributes']['class'][] = 'sort';
+    $form['ding_footer']['blocks'][$key]['sort']['#attributes']['class'][] = 'sort';
 
     // Get sort element.
-    $sort = $form['ding_footer']['blocks'][$key]['sort[]'];
-    unset($form['ding_footer']['blocks'][$key]['sort[]']);
+    $sort = $form['ding_footer']['blocks'][$key]['sort'];
+    unset($form['ding_footer']['blocks'][$key]['sort']);
 
     // Build rows.
     $classes = array('draggable');
