@@ -95,13 +95,6 @@ function ding_footer_ctools_plugin_directory($module, $plugin) {
 }
 
 /**
- * Implements hook_cron().
- */
-function ding_footer_cron() {
-  //TODO: Do we need information updated by cron?
-}
-
-/**
  * Theme function for including JavaScript
  *
  * Copied from ting_search_carousel, but is it needed here?
