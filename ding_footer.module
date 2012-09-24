@@ -69,20 +69,16 @@ function ding_footer_block_view($delta) {
  * Implements hook_theme().
  */
 function ding_footer_theme($existing, $type, $theme, $path) {
-  $hooks = array();
-
-  $hooks['ding_footer_javascript'] = array(/*no data*/); 
-
-  $hooks['ding_footer'] = array(
-     'variables' => array('footer_blocks' => NULL),
-     'template' => 'ding_footer'
+  return array(
+    'ding_footer_javascript' => array(/*no data*/), 
+    'ding_footer' => array(
+                      'variables' => array('footer_blocks' => NULL),
+                      'template' => 'ding_footer',
+                     ),
+    'ding_footer_admin_form' = array(
+                        'render element' => 'form',
+                     ),
   );
-
-  $hooks['ding_footer_admin_form'] = array(
-    'render element' => 'form',
-  );
-
-  return $hooks;
 }
 
 /**
