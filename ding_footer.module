@@ -46,14 +46,8 @@ function ding_footer_block_info() {
  * Implements hook_block_view().
  */
 function ding_footer_block_view($delta) {
-  $block = array();
-
-  switch ($delta) {
-    case 'ding_footer':
-      $footer_blocks = variable_get('ding_footer_blocks', array());
-      $block['content'] = theme('ding_footer', array('footer_blocks' => $footer_blocks));
-      break;
-  }
+  $footer_blocks = variable_get('ding_footer_blocks', array());
+  $block['content'] = theme('ding_footer', array('footer_blocks' => $footer_blocks));
 
   return $block;
 }
