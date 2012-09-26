@@ -13,8 +13,8 @@ function ding_footer_menu() {
   $items['admin/config/ding/footer'] = array(
     'title' => 'Ding Footer',
     'description' => '',
-    'page callback' => 'ding_footer_admin_page',
-    'page arguments' => array(),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ding_footer_admin_form'),
     'access arguments' => array('access administration pages'),
     'file' => 'ding_footer.admin.inc',
   );
