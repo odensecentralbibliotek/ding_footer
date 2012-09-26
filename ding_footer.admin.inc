@@ -1,5 +1,15 @@
 <?php
 
+function ding_footer_admin_page() {
+  $path = drupal_get_path('module','ding_footer');
+  
+  drupal_add_js($path . '/js/ckeditor.js');
+  drupal_add_js($path . '/js/ckeditorjquery.js');
+  drupal_add_js($path . '/js/ding_footer.admin.js');
+
+  return drupal_get_form('ding_footer_admin_form');
+}
+
 function ding_footer_admin_form ($form, &$form_state) {
   $blocks = variable_get('ding_footer_blocks');
   
@@ -20,6 +30,7 @@ function ding_footer_admin_form ($form, &$form_state) {
       '#type' =>   'textfield',
       '#title' => 'Block #' . ($i + 1),
       '#default_value' => isset($blocks[$i]) ? $blocks[$i] : '',
+      '#attributes' => array('class' => array('load_wysiwyg')),
     );
   }
   
