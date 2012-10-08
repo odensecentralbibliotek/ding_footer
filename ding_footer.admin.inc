@@ -3,9 +3,9 @@
 function ding_footer_admin_page() {
   $path = drupal_get_path('module','ding_footer');
   
-  drupal_add_js($path . '/js/ckeditor.js');
-  drupal_add_js($path . '/js/ckeditorjquery.js');
-  drupal_add_js($path . '/js/ding_footer.admin.js');
+  drupal_add_js('/profiles/ding2/libraries/ckeditor/ckeditor.js', array('weight' => 10));
+  drupal_add_js('/profiles/ding2/libraries/ckeditor/adapters/jquery.js', array('weight' => 11));
+  drupal_add_js($path . '/js/ding_footer.admin.js', array('weight' => 12));
 
   return drupal_get_form('ding_footer_admin_form');
 }
@@ -27,10 +27,10 @@ function ding_footer_admin_form ($form, &$form_state) {
   
   for ($i = 0; $i < $form_state['num_blocks']; $i++) {   
      $form['blocks_fieldset']['name'][$i] = array(
-      '#type' =>   'textfield',
+      '#type' => 'text_format',
       '#title' => 'Block #' . ($i + 1),
       '#default_value' => isset($blocks[$i]) ? $blocks[$i] : '',
-      '#attributes' => array('class' => array('load_wysiwyg')),
+      '#attributes' => array('class' => array('wysiwyg-ajax')),
     );
   }
   
@@ -83,7 +83,7 @@ function ding_footer_admin_submit ($form, &$form_state) {
   $blocks = array();
   
   for($i = 0; $i < $form_state['num_blocks']; $i++) {
-    $blocks[] = $form_state['values']['blocks_fieldset']['name'][$i];
+    $blocks[] = $form_state['values']['blocks_fieldset']['name'][$i]['value'];
   }
   
   variable_set('ding_footer_blocks', $blocks);
