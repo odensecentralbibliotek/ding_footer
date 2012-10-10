@@ -17,7 +17,7 @@ $plugin = array(
  */
 function ding_footer_footer_content_type_render($subtype, $conf, $panel_args, $context) {
   $block = new stdClass();
-  $block->content = theme('ding_footer', array('blocks' => variable_get('ding_footer_blocks', array())));
+  $block->content = theme('ding_footer_blocks', array('blocks' => variable_get('ding_footer_blocks', array())));
   return $block;
 }
 

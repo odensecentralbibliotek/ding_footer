@@ -55,7 +55,7 @@ function ding_footer_block_info() {
 function ding_footer_block_view($delta) {
   $content = variable_get('ding_footer_blocks', array());
   return array(
-    'content' => theme('ding_footer', array('blocks' => $content)),
+    'content' => theme('ding_footer_blocks', array('blocks' => $content)),
   );
 }
 
@@ -64,9 +64,9 @@ function ding_footer_block_view($delta) {
  */
 function ding_footer_theme() {
   return array(
-    'ding_footer' => array(
+    'ding_footer_blocks' => array(
       'variables' => array('blocks' => NULL),
-      'template' => 'ding_footer',
+      'template' => 'ding_footer_blocks'
     ),
   );
 }
