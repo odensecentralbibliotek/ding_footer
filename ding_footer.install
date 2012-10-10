@@ -5,24 +5,8 @@
  */
 
 /**
- * Implements hook_install().
- */
-function ding_footer_install() {
-  @drupal_mkdir('public://ding_footer');
-}
-
-/**
  * Implements hook_uninstall().
  */
 function ding_footer_uninstall() {
-  @drupla_rmdir('public://ding_footer');
   variable_del('ding_footer_blocks');
-  variable_del('ding_footer_blocks_hidden');
-}
-
-/**
- * Implements hook_schema().
- */
-function ding_footer_schema() {
-  // No database changes.
 }

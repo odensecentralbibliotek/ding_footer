@@ -8,8 +8,8 @@
 $plugin = array(
   'title' => t('Ding Footer'),
   'single' => TRUE,
-  'description' => t('Footer panel'),
-  'category' => t('Ting'),
+  'description' => t('Provides ding footer content'),
+  'category' => t('Ding'),
 );
 
 /**
@@ -17,11 +17,7 @@ $plugin = array(
  */
 function ding_footer_footer_content_type_render($subtype, $conf, $panel_args, $context) {
   $block = new stdClass();
-
-  $footer_blocks = variable_get('ding_footer_blocks', array());
-
-  $block->content = theme('ding_footer', array('footer_blocks' => $footer_blocks));
-
+  $block->content = theme('ding_footer', array('blocks' => variable_get('ding_footer_blocks', array())));
   return $block;
 }
 
