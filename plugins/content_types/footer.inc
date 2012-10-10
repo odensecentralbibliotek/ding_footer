@@ -9,7 +9,7 @@ $plugin = array(
   'title' => t('Ding Footer'),
   'single' => TRUE,
   'description' => t('Provides ding footer content'),
-  'category' => t('Ding'),
+  'category' => t('Ding!'),
 );
 
 /**
