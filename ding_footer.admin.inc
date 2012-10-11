@@ -15,7 +15,7 @@
  */
 function ding_footer_admin_page() {
   // Add javascript to handle the the wysiwyg editor on ajax calls.
-  drupal_add_js(drupal_get_path('module','ding_footer') . '/js/ding_footer.admin.js', array('weight' => 12));
+  drupal_add_js(drupal_get_path('module', 'ding_footer') . '/js/ding_footer.admin.js', array('weight' => 12));
 
   // Get the administion from and return it.
   return drupal_get_form('ding_footer_admin_form');
@@ -122,7 +122,7 @@ function ding_footer_fallback($form, $form_state) {
 function ding_footer_admin_submit($form, &$form_state) {
   $content = array();
 
-  for($i = 0; $i < $form_state['number_of_blocks']; $i++) {
+  for ($i = 0; $i < $form_state['number_of_blocks']; $i++) {
     $content[] = $form_state['values']['blocks_fieldset']['name'][$i]['value'];
   }
 
