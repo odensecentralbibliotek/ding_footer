@@ -14,11 +14,6 @@
  * not hardcode to ckeditor. Which means that the JS should be alter to.
  */
 function ding_footer_admin_page() {
-  // Get the wysiwyg editor.
-  $ckeditor = libraries_get_path('ckeditor');
-  drupal_add_js($ckeditor . '/ckeditor.js', array('weight' => 10));
-  drupal_add_js($ckeditor . '/adapters/jquery.js', array('weight' => 11));
-
   // Add javascript to handle the the wysiwyg editor on ajax calls.
   drupal_add_js(drupal_get_path('module','ding_footer') . '/js/ding_footer.admin.js', array('weight' => 12));
 
@@ -59,7 +54,7 @@ function ding_footer_admin_form($form, &$form_state) {
       '#title' => t('Footer @number', array('@number' => $i + 1)),
       '#default_value' => isset($blocks[$i]) ? $blocks[$i] : '',
       '#attributes' => array(
-        'class' => array('wysiwyg-ajax')
+        'class' => array('wysiwyg-ajax'),
       ),
     );
   }

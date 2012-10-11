@@ -5,6 +5,7 @@ description = "Provides a block with a variable number of columns that can be us
 
 dependencies[] = panels
 dependencies[] = ctools
+dependencies[] = wysiwyg
 
 files[] = ding_footer.module
 files[] = ding_footer.install
