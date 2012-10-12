@@ -1,0 +1,13 @@
+core = "7.x"
+package = Ding!
+name = "Ding Footer"
+description = "Provides a block with a variable number of columns that can be used to create the site footer"
+
+dependencies[] = panels
+dependencies[] = ctools
+dependencies[] = wysiwyg
+
+files[] = ding_footer.module
+files[] = ding_footer.install
+
+configure = admin/config/ding/footer

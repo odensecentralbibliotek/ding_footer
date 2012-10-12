@@ -1,0 +1,78 @@
+<?php
+/**
+ * @file
+ * This module provides both a block and a panels pane with its content. This
+ * file defines the block.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function finurlig_create_permission() {
+  return array(
+    'administre ding footer' => array(
+      'title' => t('Administre footer'),
+      'description' => t('Perform administration tasks for the footer.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function ding_footer_menu() {
+  $items = array();
+
+  $items['admin/config/ding/footer'] = array(
+    'title' => 'Ding Footer',
+    'description' => 'Edit or add new footer content to the site',
+    'page callback' => 'ding_footer_admin_page',
+    'page arguments' => array(''),
+    'access arguments' => array('administre ding footer'),
+    'file' => 'ding_footer.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function ding_footer_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools' || $module == 'panels') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function ding_footer_block_info() {
+  return array(
+    'ding_footer' => array(
+      'info' => 'Ding Footer'
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function ding_footer_block_view($delta) {
+  $content = variable_get('ding_footer_blocks', array());
+  return array(
+    'content' => theme('ding_footer_blocks', array('blocks' => $content)),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function ding_footer_theme() {
+  return array(
+    'ding_footer_blocks' => array(
+      'variables' => array('blocks' => NULL),
+      'template' => 'ding_footer_blocks'
+    ),
+  );
+}
