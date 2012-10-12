@@ -6,10 +6,16 @@
  */
 
 /**
- * @todo add premission so that it can be controled who has access to edit
- * footer content.
+ * Implements hook_permission().
  */
-
+function finurlig_create_permission() {
+  return array(
+    'administre ding footer' => array(
+      'title' => t('Administre footer'),
+      'description' => t('Perform administration tasks for the footer.'),
+    ),
+  );
+}
 
 /**
  * Implements hook_menu().
@@ -22,7 +28,7 @@ function ding_footer_menu() {
     'description' => 'Edit or add new footer content to the site',
     'page callback' => 'ding_footer_admin_page',
     'page arguments' => array(''),
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('administre ding footer'),
     'file' => 'ding_footer.admin.inc',
   );
 
